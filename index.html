@@ -178,9 +178,10 @@ function haptic(kind){
   const now=performance.now();
   if(kind==='tick'&&now-lastHap<38)return;
   lastHap=now;
-  if(canVib){try{navigator.vibrate(kind==='win'?[25,60,25,60,45]:kind==='tick'?6:12)}catch(e){}return}
-  iosTap();
-  if(kind==='win'){setTimeout(iosTap,110);setTimeout(iosTap,220)}
+  if(canVib){try{navigator.vibrate(kind==='win'?[90,60,90,60,90,60,180]:kind==='tick'?22:40)}catch(e){}return}
+  // iOS has one fixed tap strength, so stronger moments stack several taps
+  const burst=(n,gap)=>{iosTap();for(let i=1;i<n;i++)setTimeout(iosTap,i*gap)};
+  if(kind==='win')burst(6,70);else if(kind==='tap')burst(2,28);else burst(2,16);
 }
 
 function fitText(t,w){if(ctx.measureText(t).width<=w)return t;let s=t;while(s.length>1&&ctx.measureText(s+'…').width>w)s=s.slice(0,-1);return s+'…'}
